@@ -1,14 +1,14 @@
-# Routes, Controllers, and Services – Single File Demo
+# Routes, Controllers, and Services 
 
 ## Objective
 To demonstrate understanding of servers, routes, controllers, and services
 using Flask and FastAPI in a single-file implementation.
 
-## Architecture (Conceptual)
+## Architecture 
 Routes: Define API endpoints
 Controllers: Handle request flow
 Services: Perform business logic
-(All implemented in one file for simplicity)
+
 
 ## APIs
 - GET /users
@@ -29,5 +29,6 @@ python flask_app.py
 uvicorn fastapi_app:app --reload
 
 ## Testing
-Use Postman to test GET and POST requests.
+Used Postman to test GET and POST requests.
 Successful responses confirm correct routing and logic execution.
+
