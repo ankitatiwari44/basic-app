@@ -1,6 +1,14 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request
+from flask_restx import Api, Resource, fields
 
 app = Flask(__name__)
+
+api = Api(
+    app,
+    title="User Management API",
+    description="Basic GET and POST APIs using Flask with Swagger documentation",
+    version="1.0.0"
+)
 
 
 # SERVICE LAYER
@@ -18,29 +26,31 @@ def create_user_service(user_data):
     }
 
 
-# CONTROLLER LAYER
+# REQUEST MODEL
 
-def get_users_controller():
-    users = get_all_users_service()
-    return jsonify(users), 200
+user_model = api.model("User", {
+    "name": fields.String(required=True, description="User name"),
+    "role": fields.String(required=True, description="User role")
+})
 
-def create_user_controller():
-    data = request.json
-    response = create_user_service(data)
-    return jsonify(response), 201
+# ROUTES + CONTROLLERS
 
-# ROUTES
+@api.route("/users")
+class UserResource(Resource):
 
-@app.route("/users", methods=["GET"])
-def get_users_route():
-    return get_users_controller()
+    @api.response(200, "Success")
+    def get(self):
+        """Get all users"""
+        return get_all_users_service(), 200
 
-@app.route("/users", methods=["POST"])
-def create_user_route():
-    return create_user_controller()
-
+    @api.expect(user_model)
+    @api.response(201, "User created successfully")
+    def post(self):
+        """Create a new user"""
+        data = request.get_json()
+        response = create_user_service(data)
+        return response, 201
 
 # SERVER
-
 if __name__ == "__main__":
     app.run(debug=True)
